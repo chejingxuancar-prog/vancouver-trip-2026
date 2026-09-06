@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vancouver 2026 - Travel Itinerary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .mode-toggle {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        body.dark-mode .mode-toggle {
+            background: #0056b3;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #007bff;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+        }
+        
+        body.dark-mode .section h2 {
+            color: #4da3ff;
+        }
+        
+        /* Countdown Card */
+        .countdown-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .countdown-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .time-value {
+            font-size: 32px;
+        }
+        
+        .time-label {
+            font-size: 12px;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        /* Flights */
+        .flight {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        body.dark-mode .flight {
+            background: #2a2a2a;
+            border-left-color: #4caf50;
+        }
+        
+        .flight-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .flight-time {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .flight-detail {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        body.dark-mode .flight-detail {
+            color: #aaa;
+        }
+        
+        /* Itinerary */
+        .itinerary-day {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        body.dark-mode .itinerary-day {
+            background: #2a2a2a;
+            border-left-color: #ffb300;
+        }
+        
+        .day-header {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #007bff;
+        }
+        
+        body.dark-mode .day-header {
+            color: #4da3ff;
+        }
+        
+        .day-time {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        body.dark-mode .day-time {
+            color: #aaa;
+        }
+        
+        .day-content {
+            font-size: 14px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist li {
+            background: #f8f9fa;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #dc3545;
+            font-size: 14px;
+        }
+        
+        body.dark-mode .checklist li {
+            background: #2a2a2a;
+            border-left-color: #ff6b6b;
+        }
+        
+        .checklist li:before {
+            content: "□ ";
+            font-weight: bold;
+            margin-right: 8px;
+            color: #dc3545;
+        }
+        
+        body.dark-mode .checklist li:before {
+            color: #ff6b6b;
+        }
+        
+        /* Tips */
+        .tip {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        body.dark-mode .tip {
+            background: #1a3a52;
+            border-left-color: #4da3ff;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #ddd;
+            margin-top: 40px;
+        }
+        
+        body.dark-mode footer {
+            border-top-color: #444;
+            color: #666;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .countdown-timer {
+                gap: 10px;
+                font-size: 18px;
+            }
+            
+            .time-value {
+                font-size: 24px;
+            }
+            
+            .flight-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇨🇦 Vancouver 2026</h1>
+            <button class="mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        </header>
+        
+        <!-- Countdown Section -->
+        <section class="section">
+            <div class="countdown-card">
+                <h3>Next Adventure</h3>
+                <div class="countdown-timer">
+                    <div class="time-unit">
+                        <div class="time-value" id="days">0</div>
+                        <div class="time-label">Days</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="hours">0</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="minutes">0</div>
+                        <div class="time-label">Mins</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="seconds">0</div>
+                        <div class="time-label">Secs</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 13px; opacity: 0.9;">Departure: Sep 16, 2026 11:00 AM EDT</p>
+            </div>
+        </section>
+        
+        <!-- Flights Section -->
+        <section class="section">
+            <h2>✈️ Flights</h2>
+            <div class="flight">
+                <div class="flight-time">Outbound: Wednesday, Sep 16, 2026</div>
+                <div class="flight-info">
+                    <div>
+                        <div class="flight-detail">Toronto (YYZ) 11:00 AM</div>
+                        <div class="flight-detail">→ Vancouver (YVR) 1:00 PM (PT)</div>
+                    </div>
+                    <div>
+                        <div class="flight-detail">AC 105 • Air Canada</div>
+                        <div class="flight-detail">Airbus A220-300 • 5 hours</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flight">
+                <div class="flight-time">Return: Monday, Sep 28, 2026</div>
+                <div class="flight-info">
+                    <div>
+                        <div class="flight-detail">Vancouver (YVR) 3:25 PM (PT)</div>
+                        <div class="flight-detail">→ Toronto (YYZ) 11:00 PM (ET)</div>
+                    </div>
+                    <div>
+                        <div class="flight-detail">AC 122 • Air Canada</div>
+                        <div class="flight-detail">Airbus A220-300 • 4h 35min</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Hotels Section -->
+        <section class="section">
+            <h2>🏨 Accommodation</h2>
+            <div class="itinerary-day">
+                <div class="day-header">Sep 16-20: VAN NEST (Vancouver)</div>
+                <div class="day-time">Economy Double Room • Airbnb</div>
+                <div class="day-content">4 nights • Downtown Vancouver</div>
+            </div>
+            <div class="itinerary-day">
+                <div class="day-header">Sep 20-22: Pacific Rim Motel (Ucluelet)</div>
+                <div class="day-time">Standard Room</div>
+                <div class="day-content">2 nights • 1755 Peninsula Road, Ucluelet</div>
+            </div>
+            <div class="itinerary-day">
+                <div class="day-header">Sep 22-24: Qualicum Bay Resort</div>
+                <div class="day-time">Standard Room • <span style="color: #dc3545;">⚠️ Need to modify to Sep 22-24</span></div>
+                <div class="day-content">3 nights • Qualicum Beach</div>
+            </div>
+            <div class="itinerary-day">
+                <div class="day-header">Sep 24-25: Gabriola Island Airbnb</div>
+                <div class="day-time">🔍 Awaiting booking</div>
+                <div class="day-content">1 night • Gabriola Island</div>
+            </div>
+            <div class="itinerary-day">
+                <div class="day-header">Sep 25-26: Vancouver Airport Hotel</div>
+                <div class="day-time">🔍 Awaiting booking</div>
+                <div class="day-content">2 nights • Vancouver area</div>
+            </div>
+        </section>
+        
+        <!-- Daily Itinerary -->
+        <section class="section">
+            <h2>📅 Day-by-Day Itinerary</h2>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 16 (Wed) - Arrival in Vancouver</div>
+                <div class="day-time">11:00 AM - 1:00 PM</div>
+                <div class="day-content">Flight YYZ → YVR</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 16 (Wed) - Downtown Exploration</div>
+                <div class="day-time">1:00 PM - Evening</div>
+                <div class="day-content">Waterfront Walk + Gastown</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 17 (Thu) - Stanley Park & Culture</div>
+                <div class="day-time">Full day</div>
+                <div class="day-content">Stanley Park bike ride + Flyover Canada + Dr. Sun Yat-Sen Chinese Garden + Chinatown</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 18 (Fri) - Granville Island or UBC</div>
+                <div class="day-time">Full day</div>
+                <div class="day-content">Explore Granville Island (farmers market, shops) or UBC Campus</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 19 (Sat) - Flexible Day</div>
+                <div class="day-time">Full day</div>
+                <div class="day-content">Last minute Vancouver exploration or rest before road trip</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 20 (Sun) - Road Trip to Ucluelet</div>
+                <div class="day-time">All day</div>
+                <div class="day-content">Rent car at Nanaimo Airport • Drive to Ucluelet (~2h 45min) • Evening: Wild Pacific Trail walk</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 21 (Mon) - Ucluelet Nature</div>
+                <div class="day-time">All day</div>
+                <div class="day-content">Rainforest Trail A & B (1 hour) + Ucluelet Harbour Kayaking Tour (2.5-3 hours)</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 22 (Tue) - Drive to Qualicum Beach</div>
+                <div class="day-time">All day</div>
+                <div class="day-content">Ucluelet → Goat on the Roof (45 min stop) → Little Qualicum Cheeseworks (1 hour) → Qualicum Bay</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 23 (Wed) - Relaxation Day (Backup Oyster Digging)</div>
+                <div class="day-time">Flexible</div>
+                <div class="day-content">Beach exploration • Tide check: 6:14 PM low tide at Gabriola Island (backup oyster digging time)</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 24 (Thu) - Oyster Digging + Gabriola Ferry</div>
+                <div class="day-time">1:30 PM - Evening</div>
+                <div class="day-content">
+                    <strong>1:30 PM Low Tide:</strong> Dig oysters/clams at Union Bay (2-3 hours)<br>
+                    <strong>Evening:</strong> Drive to Nanaimo Ferry Terminal → Ferry to Gabriola Island (~7:30 PM arrival)
+                </div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 25 (Fri) - Gabriola Island Exploration</div>
+                <div class="day-time">Full day</div>
+                <div class="day-content">
+                    Gabriola Sands Provincial Park • Drumbeg Park • Malaspina Galleries • Local cafés<br>
+                    <strong>3:30 PM:</strong> Ferry back to Nanaimo → Return rental car → Drive to Vancouver (~3 hours)
+                </div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 26-27 (Fri-Sat) - Vancouver</div>
+                <div class="day-time">To be detailed</div>
+                <div class="day-content">Grouse Mountain • Lynn Valley Suspension Bridge • City exploration</div>
+            </div>
+            
+            <div class="itinerary-day">
+                <div class="day-header">Sep 28 (Mon) - Return to Toronto</div>
+                <div class="day-time">3:25 PM</div>
+                <div class="day-content">Flight YVR → YYZ (11:00 PM arrival)</div>
+            </div>
+        </section>
+        
+        <!-- To-Do List -->
+        <section class="section">
+            <h2>✓ To-Do Before Trip</h2>
+            <ul class="checklist">
+                <li>Modify Qualicum Bay Resort booking: Sep 22-24 (extend 1 night)</li>
+                <li>Book Gabriola Island Airbnb (Sep 24-25)</li>
+                <li>Book Vancouver hotel near airport (Sep 25-26)</li>
+                <li>Confirm Ucluelet Harbour Kayaking Tour reservation</li>
+                <li>Reserve Grouse Mountain Gravity Coaster tickets</li>
+                <li>Check Granville Island events for Sep 18</li>
+                <li>Verify Union Bay oyster digging regulations & license</li>
+                <li>Return rental car on Sep 25 in Nanaimo</li>
+            </ul>
+        </section>
+        
+        <!-- Tips Section -->
+        <section class="section">
+            <h2>💡 Important Information</h2>
+            <div class="tip">
+                <strong>🌊 Tide Times:</strong> Sep 23 @ 6:14 PM (low tide, -4.3 ft) | Sep 24 @ 1:29 PM (low tide, -0.7 m) - Gabriola Island reference
+            </div>
+            <div class="tip">
+                <strong>🚗 Car Rental:</strong> Rent at Nanaimo Airport (Sep 20) • Return at Nanaimo (Sep 25) • 6 days total
+            </div>
+            <div class="tip">
+                <strong>🚤 Ferry Schedule:</strong> Nanaimo ↔ Gabriola: Every 40-60 minutes • Crossing: 20-25 minutes
+            </div>
+            <div class="tip">
+                <strong>⏰ Timezone:</strong> Toronto (EDT) -3 hours from Vancouver (PDT)
+            </div>
+            <div class="tip">
+                <strong>📍 Repository:</strong> <a href="https://github.com/chejingxuancar-prog/vancouver-trip-2026" style="color: #0066cc;">GitHub: vancouver-trip-2026</a>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Last updated: Generated for Sep 16-28, 2026 trip</p>
+            <p>Deployed on GitHub Pages • Mobile optimized • Dark mode included 🎒</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // Auto-detect dark mode based on system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            if (localStorage.getItem('darkMode') === null) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+        
+        // Countdown timer
+        function updateCountdown() {
+            // Departure time: Sep 16, 2026 11:00 AM EDT
+            const departureTime = new Date('2026-09-16T11:00:00-04:00').getTime();
+            const now = new Date().getTime();
+            const distance = departureTime - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+        
+        // Update countdown every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
