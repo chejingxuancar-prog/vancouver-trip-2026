@@ -1,0 +1,8 @@
+name = "vancouver-trip-2026"
+type = "javascript"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "vancouver-trip-2026"
+route = "vancouver-trip-2026.chejingxuancar-prog.workers.dev/*"

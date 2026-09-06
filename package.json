@@ -1,0 +1,14 @@
+{
+  "name": "vancouver-trip-2026",
+  "version": "1.0.0",
+  "description": "Interactive travel itinerary for Vancouver Island trip",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0",
+    "@cloudflare/workers-types": "^4.20240715.0"
+  }
+}
